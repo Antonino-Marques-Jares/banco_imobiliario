@@ -2,7 +2,6 @@
 a minha versão de um banco imobiliário com possibilidade de pegar emprestimo do banco
 
 ## Regras do Jogo:
-
 1. Cada jogador começa com um salário inicial que deve ser informado ao adicionar a conta.
 2. A cada volta completa, um novo mês começa e o salário é adicionado ao saldo, isso é determinado pelo programa. Após a logada do jogador basta dar o comando "proximo".
 3. Jogadores podem comprar imóveis do banco ou de outros jogadores.
@@ -12,12 +11,11 @@ a minha versão de um banco imobiliário com possibilidade de pegar emprestimo d
 7. Será decretado a falência do jogador que mesmo somando saldo e total de imóveis ainda faltar dinheiro para quitar as dívidas. Neste caso o jogador terá sido desclassificado.
 
 ## Lista de preços:
-
-Resort: 500
-Hotel: 300
-Guincho: 800
-Restaurante: 250
-Pedagio: 25
+Resort: 500.
+Hotel: 300.
+Guincho: 800.
+Restaurante: 250.
+Pedagio: 25.
 
 ## Comandos Disponíveis no prompt do Banco:
 
