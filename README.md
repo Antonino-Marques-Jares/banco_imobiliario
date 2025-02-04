@@ -19,20 +19,20 @@ a minha versão de um banco imobiliário com possibilidade de pegar emprestimo d
 
 ## Comandos Disponíveis no prompt do Banco:
 
-**adicionarConta <nome> <salario>**: Adiciona uma nova conta com o nome e salário especificados.
-Exemplo: adicionarConta Nino 2000
+>**adicionarConta <nome> <salario>**: Adiciona uma nova conta com o nome e salário especificados.
+>Exemplo: adicionarConta Nino 2000
 
-**proximo**: Passa para o próximo jogador e atualiza o mês após uma volta completa na lista de jogadores.
-Exemplo: proximo
+>**proximo**: Passa para o próximo jogador e atualiza o mês após uma volta completa na lista de jogadores.
+>Exemplo: proximo
 
-**extrato <nome>**: Exibe o extrato da conta especificada.
-Exemplo: extrato Nino
+>**extrato <nome>**: Exibe o extrato da conta especificada.
+>Exemplo: extrato Nino
 
-**extratoDeTodos**: Exibe o extrato de todas as contas inclusive do Banco
-Exemplo: extratoDeTodos
+>**extratoDeTodos**: Exibe o extrato de todas as contas inclusive do Banco
+>Exemplo: extratoDeTodos
 
-**comprarImovel <compradorNome> <vendedorNome> <imovelNome> <valor>**: Compra um imóvel do vendedor pelo valor especificado.
-Exemplo: comprarImovel Nino Banco hotel1 2000"
+>**comprarImovel <compradorNome> <vendedorNome> <imovelNome> <valor>**: Compra um imóvel do vendedor pelo valor especificado.
+>Exemplo: comprarImovel Nino Banco hotel1 2000"
 
-**transferir <remetenteNome> <destinatarioNome> <valor>**: Transfere um valor de uma conta para outra.
-Exemplo: transferir Nino Ana 500"
+>**transferir <remetenteNome> <destinatarioNome> <valor>**: Transfere um valor de uma conta para outra.
+>Exemplo: transferir Nino Ana 500"
