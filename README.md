@@ -1,5 +1,5 @@
 # banco_imobiliario
-a minha versão de um banco imobiliário com possibilidade de pegar emprestimo do banco
+A minha versão de um banco imobiliário em uma página HTML com possibilidade de pegar emprestimo do banco.
 
 ## Regras do Jogo:
 1. Cada jogador começa com um salário inicial que deve ser informado ao adicionar a conta.
