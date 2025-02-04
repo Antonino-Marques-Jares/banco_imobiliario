@@ -1,5 +1,9 @@
 # banco_imobiliario
 A minha versão de um banco imobiliário em uma página HTML com possibilidade de pegar emprestimo do banco.
+Você vai precisar criar as cartas ou uma roleta que serão os fatores aleatórios, estas cartas podem por exemplo mandar o carro ser rebocado ao guincho anterior ou ao borracheiro, mas também pode dar sorte e receber uma herança. o Jogador que cair em uma casa com a estrela terá que pegar uma carta ou rodar a roleta.
+Toda vez que entrar em uma nova estrada deverá pagar o pedágio ao proprietário.
+Toda vez que cair em um hotel, resort ou restaurante deve pagar o valor do serviço.
+Para saber quem é o proprietário execute 'extratoDeTodos' e você verá os imóveis dos correntistas.
 
 ## Regras do Jogo:
 1. Cada jogador começa com um salário inicial que deve ser informado ao adicionar a conta.
