@@ -11,11 +11,11 @@ a minha versão de um banco imobiliário com possibilidade de pegar emprestimo d
 7. Será decretado a falência do jogador que mesmo somando saldo e total de imóveis ainda faltar dinheiro para quitar as dívidas. Neste caso o jogador terá sido desclassificado.
 
 ## Lista de preços:
-Resort: 500.
-Hotel: 300.
-Guincho: 800.
-Restaurante: 250.
-Pedagio: 25.
+1. Resort: 500. 
+2. Hotel: 300. 
+3. Guincho: 800. 
+4. Restaurante: 250. 
+5. Pedagio: 25. 
 
 ## Comandos Disponíveis no prompt do Banco:
 
