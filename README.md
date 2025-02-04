@@ -11,7 +11,7 @@ a minha versão de um banco imobiliário com possibilidade de pegar emprestimo d
 6. O objetivo é acumular a maior número de imóveis evitando a falência.
 7. Será decretado a falência do jogador que mesmo somando saldo e total de imóveis ainda faltar dinheiro para quitar as dívidas. Neste caso o jogador terá sido desclassificado.
 
-## Lista de preços:");
+## Lista de preços:
 
 Resort: 500
 Hotel: 300
