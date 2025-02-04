@@ -3,7 +3,10 @@
 >
 >Você vai precisar criar as cartas ou uma roleta que serão os fatores aleatórios, estas cartas podem por exemplo mandar o carro ser rebocado ao guincho anterior ou ao borracheiro, mas também pode dar sorte e receber uma herança. o Jogador que cair em uma casa com a estrela terá que pegar uma carta ou rodar a roleta.
 >
->Toda vez que entrar em uma nova estrada deverá pagar o pedágio ao proprietário.
+>Distribua os imóveis no tabuleiro
+>6 hotéis, 3 Resorts, 3 guinchos (1 em cada estrada), 1 borracheiro, 3 restaurantes
+>
+>Toda vez que entrar em uma nova estrada deverá pagar o pedágio ao proprietário do pedágio da estrada.
 >
 >Toda vez que cair em um hotel, resort ou restaurante deve pagar o valor do serviço.
 >
@@ -20,11 +23,11 @@
 7. Será decretado a falência do jogador que mesmo somando saldo e total de imóveis ainda faltar dinheiro para quitar as dívidas. Neste caso o jogador terá sido desclassificado.
 
 ## Lista de preços:
-1. Resort: 500 contos. 
-2. Hotel: 300 contos. 
-3. Guincho: 800 contos. 
-4. Restaurante: 250 contos.
-5. Pedagio: 25 contos.
+1. Resort: 500 contos parada no local. 
+2. Hotel: 300 contos parada no local. 
+3. Guincho: 800 contos parada no local. 
+4. Restaurante: 250 contos parada no local.
+5. Pedagio: 25 contos quando entrar na estrada.
 
 ## Comandos Disponíveis no prompt do Banco:
 
