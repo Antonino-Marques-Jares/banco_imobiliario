@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Banco Metropolitano</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .log {
+            border: 1px solid #000;
+            padding: 10px;
+            height: 600px;
+            overflow-y: scroll;
+        }
+        .log p {
+            margin: 5px 0;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Banco Metropolitano</h1>
+    <div class="log" id="log"></div>
+    <input type="text" id="commandInput" placeholder="Digite um comando...">
+
+    <script>
+        class Conta {
+            constructor(nome, salario, saldoInicial = 0) {
+				this.nome = nome;
+				this.saldo = saldoInicial || salario;
+				this.salario = salario;
+				this.lista_imoveis = {};
+				this.emprestimo = {
+					valor: 0,
+					parcelas_a_pagar: []
+				};
+				this.numeroCartao = Math.floor(Math.random() * 90) + 10;
+				this.falido = false;
+			}
+
+            pegarEmprestimo(valor, parcelas, banco) {
+				const valorMaximoEmprestimo = 0.1 * this.calcularValorTotalImoveis();
+				if (valor > valorMaximoEmprestimo) {
+					this.log(`Valor máximo de empréstimo é ${valorMaximoEmprestimo} (10% dos Imóveis).`);
+					return;
+				}
+				
+				const valorParcela = (valor * 1.1) / parcelas;
+
+				this.emprestimo.valor = valor;
+				this.emprestimo.parcelas_a_pagar = []; // Garante que a lista está vazia antes de adicionar novas parcelas.
+
+				for (let i = 0; i < parcelas; i++) {
+					this.emprestimo.parcelas_a_pagar.push(valorParcela);
+				}
+
+				this.saldo += valor;
+
+				this.log(`${this.nome} pegou um empréstimo de ${valor} em ${parcelas} parcelas.`);
+			}
+
+            calcularValorTotalImoveis() {
+                return Object.values(this.lista_imoveis).reduce((acc, val) => acc + val, 0);
+            }
+
+            atualizarSaldo(banco) {
+				this.saldo += this.salario;
+
+				if (this.emprestimo.parcelas_a_pagar.length > 0) {
+					const valorParcela = this.emprestimo.parcelas_a_pagar.shift();
+					this.saldo -= valorParcela;
+					banco.saldo += valorParcela - (valorParcela / 1.1);
+
+					this.log(`Parcela de ${valorParcela} abatida do empréstimo de ${this.nome}.`);
+
+					// Se não houver mais parcelas, o empréstimo é quitado
+					if (this.emprestimo.parcelas_a_pagar.length === 0) {
+						this.emprestimo.valor = 0;
+						this.log(`${this.nome} quitou seu empréstimo.`);
+					}
+				}
+
+				// Se o saldo ficou negativo, liquidar imóveis automaticamente
+				while (this.saldo < 0 && Object.keys(this.lista_imoveis).length > 0) {
+					let imovelMaisCaro = Object.entries(this.lista_imoveis).sort((a, b) => b[1] - a[1])[0];
+
+					if (imovelMaisCaro) {
+						let [imovelNome, valor] = imovelMaisCaro;
+						delete this.lista_imoveis[imovelNome];
+						this.saldo += valor;
+						banco.lista_imoveis[imovelNome] = valor; // Transfere imóvel ao banco
+
+						this.log(`Imóvel ${imovelNome} vendido por ${valor} para cobrir dívida.`);
+					}
+				}
+
+				// Se ainda estiver negativo após vender tudo, está falido
+				if (this.saldo < 0) {
+					this.falido = true;
+					this.log(`${this.nome} está falido e fora do jogo.`);
+				}
+
+				this.log(`${this.nome} atualizou o saldo para ${this.saldo}.`);
+			}
+
+            liquidarDividas() {
+                const propriedades = Object.entries(this.lista_imoveis).sort((a, b) => b[1] - a[1]);
+                for (let [nome, valor] of propriedades) {
+                    if (this.saldo >= 0) break;
+                    delete this.lista_imoveis[nome];
+                    this.saldo += valor;
+                    this.log(`${nome} será leiloado.`);
+                }
+                if (this.saldo < 0) {
+                    this.log(`${this.nome} está falido.`);
+                    this.falido = true;
+                }
+            }
+
+            extrato() {
+				this.log(`Extrato da conta ${this.nome}:`);
+				this.log(`   Saldo: ${this.saldo}`);
+				this.log(`   Salário: ${this.salario}`);
+				this.log(`   Lista de Imóveis: ${JSON.stringify(this.lista_imoveis)}`);
+				this.log(`   Empréstimo: ${this.emprestimo.valor > 0 ? `Valor: ${this.emprestimo.valor}, Parcelas a pagar: ${JSON.stringify(this.emprestimo.parcelas_a_pagar)}` : 'Nenhum'}`);
+			}
+
+			log(message) {
+				const logDiv = document.getElementById('log');
+				const p = document.createElement('p');
+				
+				// Substitui as novas linhas por <br> para exibir corretamente no HTML
+				message = message.replace(/\n/g, '<br>');
+				p.innerHTML = message.replace(/ /g, '&nbsp;');
+				
+				logDiv.appendChild(p);
+				logDiv.scrollTop = logDiv.scrollHeight;
+			}
+        }
+
+        class Banco {
+            constructor() {
+				this.contas = [];
+				this.mes = 0;
+				this.turnos = 0; // Contador de turnos
+				this.jogadorAtual = 0;
+				this.banco = new Conta("Banco", 5000000, 0);
+				this.banco.lista_imoveis = { 
+				'hotel1': 2000, 
+				'hotel2': 2000,
+				'hotel3': 2000, 
+				'hotel4': 2000,	
+				'hotel5': 2000, 
+				'hotel6': 2000,	
+				'Resort1': 10000, 
+				'Resort2': 10000,
+				'Resort3': 10000,
+				'guincho_estrada_1': 15000, 
+				'guincho_estrada_2': 15000,	
+				'guincho_estrada_3': 15000,
+				'borracheiro': 2000,
+				'restaurante_estrada_1': 4000,	
+				'restaurante_estrada_2': 3000,
+				'restaurante_estrada_3': 3000,
+				'pedagio_estrada_1': 30000,	
+				'pedagio_estrada_2': 30000,
+				'pedagio_estrada_3': 30000,
+				};
+			}
+			
+			extratoDeTodos() {
+				this.log("Extratos de Todos os Correntistas:");
+				this.banco.extrato();
+				this.contas.forEach(conta => {
+					conta.extrato();
+				});
+			}
+			
+			transferir(remetenteNome, destinatarioNome, valor) {
+				const remetente = this.contas.find(c => c.nome === remetenteNome);
+				const destinatario = this.contas.find(c => c.nome === destinatarioNome);
+
+				if (remetente && destinatario) {
+					const valorNum = Number(valor);
+
+					if (!isNaN(valorNum) && remetente.saldo >= valorNum) {
+						remetente.saldo -= valorNum;
+						destinatario.saldo += valorNum;
+
+						this.log(`${remetenteNome} transferiu ${valorNum} para ${destinatarioNome}.`);
+					} else {
+						this.log('Saldo insuficiente ou valor inválido.');
+					}
+				} else {
+					this.log('Conta não encontrada.');
+				}
+			}
+			
+			imprimirRegras() {
+				this.log(`\n`);
+				this.log("Regras do Jogo:");
+				this.log("1. Cada jogador começa com um salário inicial.");
+				this.log("2. A cada volta completa, um novo mês começa e o salário é adicionado ao saldo.");
+				this.log("3. Jogadores podem comprar imóveis do banco ou de outros jogadores.");
+				this.log("4. Jogadores podem pegar empréstimos com o banco de até 12 vezes, apenas um emprestimo é permitido por vez, o limite do emprestimo é de 10% sobre seus bens e os juros cobrados são de 10% sobre o valor da parcela.");
+				this.log("5. Se o saldo de um jogador ficar negativo, os imóveis serão passados ao banco para liquidar a dívida e os imóveis voltam ao mercado.");
+				this.log("6. O objetivo é acumular a maior número de imóveis evitando a falência.");
+				this.log("7. Será decretado a falência do jogador que mesmo somando saldo e total de imóveis ainda faltar dinheiro para quitar as dívidas. Neste caso o jogador terá sido desclassificado.");
+				this.log("\n");
+				this.log("Lista de preços:");
+				this.log("Resort: 500");
+				this.log("Hotel: 300");
+				this.log("Guincho: 800");
+				this.log("Restaurante: 250");
+				this.log("Pedagio: 25");
+				this.log("\n");
+				this.log("Comandos Disponíveis:");
+				this.log("adicionarConta <nome> <salario>: Adiciona uma nova conta com o nome e salário especificados.");
+				this.log("Exemplo: adicionarConta Nino 2000");
+				this.log("proximo: Passa para o próximo jogador e atualiza o mês após uma volta completa na lista de jogadores.");
+				this.log("Exemplo: proximo");
+				this.log("extrato <nome>: Exibe o extrato da conta especificada.");
+				this.log("Exemplo: extrato Nino");
+				this.log("extratoDeTodos: Exibe o extrato de todas as contas inclusive do Banco");
+				this.log("Exemplo: extratoDeTodos");
+				this.log("comprarImovel <compradorNome> <vendedorNome> <imovelNome> <valor>: Compra um imóvel do vendedor pelo valor especificado.");
+				this.log("Exemplo: comprarImovel Nino Banco hotel1 2000");
+				this.log("transferir <remetenteNome> <destinatarioNome> <valor>: Transfere um valor de uma conta para outra.");
+				this.log("Exemplo: transferir Nino Ana 500");
+			}
+
+            adicionarConta(nome, salario) {
+				const novaConta = new Conta(nome, salario);
+				this.contas.push(novaConta);
+				this.log('\n'); // Adiciona uma linha em branco
+				this.log(`Conta de ${nome} com salário de ${salario} foi criada.`);
+			}
+
+            sortearOrdemJogada() {
+                this.contas = this.contas.sort(() => Math.random() - 0.5);
+				this.log(`\n`);
+                this.log('Ordem de jogada sorteada.');
+            }
+			
+			extrato(nome) {
+                const conta = nome === 'Banco' ? this.banco : this.contas.find(c => c.nome === nome);
+                if (conta) {
+				    this.log(`\n`);
+                    log(conta.extrato());
+                } else {
+                    this.log('Conta não encontrada.');
+                }
+            }
+
+            proximo() {
+				if (this.contas.length === 0) {
+					this.log('Nenhuma conta disponível.');
+					return;
+				}
+
+				const jogadorAtual = this.contas[this.jogadorAtual];
+				if (jogadorAtual.falido) {
+					this.log(`Turno de ${jogadorAtual.nome}\nJogador ${jogadorAtual.nome} está falido e será pulado.`);
+				} else {
+					this.log(`\nTurno de ${jogadorAtual.nome}\n`);
+					this.log(`Sua vez ${jogadorAtual.nome}!`);
+				}
+
+				// Atualiza o turno e o mês
+				this.jogadorAtual = (this.jogadorAtual + 1) % this.contas.length;
+				this.turnos++;
+
+				// Verifica se uma volta completa foi feita
+				if (this.turnos % this.contas.length === 0) {
+					this.mes++;
+					this.log(`\n`);
+					this.log(`Mês ${this.mes} iniciado.`);
+					this.log(`\n`);
+					this.contas.forEach(conta => {
+						conta.atualizarSaldo(this.banco);
+					});
+				}
+
+				if (this.mes >= 1000) {
+					this.log("Jogo encerrado após 1000 meses.");
+				}
+			}
+
+            comprarImovel(compradorNome, vendedorNome, imovelNome, valor) {
+				const comprador = this.contas.find(c => c.nome === compradorNome);
+				const vendedor = vendedorNome === 'Banco' ? this.banco : this.contas.find(c => c.nome === vendedorNome);
+
+				if (comprador && vendedor && vendedor.lista_imoveis[imovelNome]) {
+					const valorNum = Number(valor);
+					const saldoNum = Number(comprador.saldo);
+
+					// Adiciona mensagens de depuração para verificar o valor recebido
+					this.log(`Recebido valor: ${valor}`);
+					this.log(`Convertido para número: ${valorNum}`);
+
+					if (!isNaN(valorNum) && saldoNum >= valorNum) {
+						comprador.saldo -= valorNum;
+						vendedor.saldo += valorNum;
+
+						comprador.lista_imoveis[imovelNome] = vendedor.lista_imoveis[imovelNome];
+						delete vendedor.lista_imoveis[imovelNome];
+
+						this.log(`${compradorNome} comprou ${imovelNome} de ${vendedorNome} por ${valorNum}.`);
+					} else {
+						this.log('Saldo insuficiente ou valor inválido.');
+					}
+				} else {
+					this.log('Transação inválida.');
+				}
+			}
+
+            log(message) {
+				const logDiv = document.getElementById('log');
+				const p = document.createElement('p');
+				
+				// Substitui as novas linhas por <br> para exibir corretamente no HTML
+				message = message.replace(/\n/g, '<br>');
+				p.innerHTML = message.replace(/ /g, '&nbsp;');
+				
+				logDiv.appendChild(p);
+				logDiv.scrollTop = logDiv.scrollHeight;
+			}
+        }
+
+        const banco = new Banco();
+		
+		
+
+        document.getElementById('commandInput').addEventListener('keydown', function(event) {
+			if (event.key === 'Enter') {
+				const command = event.target.value;
+				event.target.value = '';
+
+				const [action, ...params] = command.split(' ');
+
+				if (action === 'adicionarConta') {
+					const [nome, salario] = params;
+					banco.adicionarConta(nome, parseFloat(salario));
+				} else if (action === 'proximo') {
+					banco.proximo();
+				} else if (action === 'pegarEmprestimo') {
+					const [nome, valor, parcelas] = params;
+					const conta = banco.contas.find(c => c.nome === nome);
+					if (conta) {
+						conta.pegarEmprestimo(parseFloat(valor), parseInt(parcelas), banco.banco);
+					}
+				} else if (action === 'comprarImovel') {
+					const [compradorNome, vendedorNome, imovelNome, valor] = params;
+					banco.comprarImovel(compradorNome, vendedorNome, imovelNome, parseFloat(valor));
+				} else if (action === 'extrato') {
+					const [nome] = params;
+					banco.extrato(nome);
+				} else if (action === 'extratoDeTodos') {
+					banco.extratoDeTodos();
+				} else if (action === 'regras') {
+					banco.imprimirRegras();
+				} else if (action === 'pegarEmprestimo') {
+					banco.pegarEmprestimo();
+				} else if (action === 'transferir') {
+					const [remetenteNome, destinatarioNome, valor] = params;
+					banco.transferir(remetenteNome, destinatarioNome, parseFloat(valor));
+				} else {
+					banco.log('Comando não reconhecido.');
+				}
+			}
+		});
+
+    </script>
+</body>
+</html>
