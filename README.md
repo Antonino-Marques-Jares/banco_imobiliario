@@ -1,5 +1,5 @@
-# banco_imobiliario
->A minha versão de um banco imobiliário em uma página HTML com possibilidade de pegar emprestimo do banco.
+# Banco Imobiliário
+>O jogo Banco Imobiliário é um exemplo de [Orientação a Objeto](https://www.areadetrampo.com.br/orientacao-a-objeto-com-javascript/?preview_id=3722&preview_nonce=631b03328c&post_format=standard&_thumbnail_id=3748&preview=true) que trago no meu site Área de Trampo, em minha versão de um banco imobiliário em uma página HTML com possibilidade de pegar emprestimo do banco.
 >
 >Você vai precisar criar as cartas ou uma roleta que serão os fatores aleatórios, estas cartas podem por exemplo mandar o carro ser rebocado ao guincho anterior ou ao borracheiro, mas também pode dar sorte e receber uma herança. o Jogador que cair em uma casa com a estrela terá que pegar uma carta ou rodar a roleta.
 >
